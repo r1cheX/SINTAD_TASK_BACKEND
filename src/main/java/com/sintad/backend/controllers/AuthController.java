@@ -83,8 +83,6 @@ public class AuthController {
         usuario.setUsername(registerRequest.getUsername());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        System.out.println("usuario: " + usuario.getEmail() + usuario.getPassword() + usuario.getUsername() + "\n");
-
         Rol roles = rolRepository.findByNombre(TypeRole.ADMIN)
                 .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
 
