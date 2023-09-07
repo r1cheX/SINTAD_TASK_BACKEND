@@ -37,7 +37,7 @@ public class EntidadController {
     public ResponseEntity<?> save(@Valid @RequestBody EntidadRequest entidadDTO){
         try{
             entidadService.createEntidad(entidadDTO);
-            return ResponseEntity.ok(new MessageResponse("Entidad creada exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Entidad creada exitosamente"));
         }catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
@@ -48,7 +48,7 @@ public class EntidadController {
                                          @PathVariable(name = "id") long id){
         try{
             entidadService.updateEntidad(entidadDTO, id);
-            return ResponseEntity.ok(new MessageResponse("Entidad actualizada exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success","Entidad actualizada exitosamente"));
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
@@ -58,7 +58,7 @@ public class EntidadController {
     public ResponseEntity<?> destroy(@PathVariable(name = "id") long id){
         try{
             entidadService.deleteEntidad(id);
-            return ResponseEntity.ok(new MessageResponse("Entidad eliminada exitosament"));
+            return ResponseEntity.ok(new MessageResponse("success", "Entidad eliminada exitosament"));
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }

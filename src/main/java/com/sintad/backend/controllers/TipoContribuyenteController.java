@@ -37,7 +37,7 @@ public class TipoContribuyenteController {
     public ResponseEntity<?> save(@Valid @RequestBody TipoContribuyenteRequest tipoContribuyenteRequest){
         try{
             tipoContribuyenteService.createTipoContribuyente(tipoContribuyenteRequest);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Contribuyente creado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Contribuyente creado exitosamente"));
         }catch(Exception e){
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
@@ -47,7 +47,7 @@ public class TipoContribuyenteController {
                                          @PathVariable(name = "id") long id){
         try{
             tipoContribuyenteService.updateTipoContribuyente(tipoContribuyenteRequest,id);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Contribuyente actualizado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Contribuyente actualizado exitosamente"));
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
@@ -57,7 +57,7 @@ public class TipoContribuyenteController {
     public ResponseEntity<?> destroy(@PathVariable(name = "id") long id){
         try{
             tipoContribuyenteService.deleteTipoContribuyente(id);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Contribuyente eliminado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Contribuyente eliminado exitosamente"));
         }catch(Exception e){
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }

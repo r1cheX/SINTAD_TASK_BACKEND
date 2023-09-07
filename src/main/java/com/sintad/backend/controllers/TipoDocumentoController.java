@@ -39,7 +39,7 @@ public class TipoDocumentoController {
     public ResponseEntity<?> save(@Valid @RequestBody TipoDocumentoRequest tipoDocumentoRequest) {
         try {
             tipoDocumentoService.createTipoDocumento(tipoDocumentoRequest);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Documento creado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Documento creado exitosamente"));
 
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -53,7 +53,7 @@ public class TipoDocumentoController {
     {
         try {
             tipoDocumentoService.updateTipoDocumento(tipoDocumentoRequest, id);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Documento actualizado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Documento actualizado exitosamente"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
@@ -63,7 +63,7 @@ public class TipoDocumentoController {
     public ResponseEntity<?> destroy(@PathVariable(name = "id") long id) {
         try {
             tipoDocumentoService.deleteTipoDocumento(id);
-            return ResponseEntity.ok(new MessageResponse("Tipo de Documento eliminado exitosamente"));
+            return ResponseEntity.ok(new MessageResponse("success", "Tipo de Documento eliminado exitosamente"));
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }

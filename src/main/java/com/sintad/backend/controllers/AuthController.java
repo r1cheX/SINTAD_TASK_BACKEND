@@ -75,7 +75,7 @@ public class AuthController {
         if (Boolean.TRUE.equals(userRepository.existsByEmail(registerRequest.getEmail()))) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("El email ya se encuentra registrado"));
+                    .body(new MessageResponse("fail", "El email ya se encuentra registrado"));
         }
 
         Usuario usuario = new Usuario();
@@ -83,12 +83,14 @@ public class AuthController {
         usuario.setUsername(registerRequest.getUsername());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
+        System.out.println("usuario: " + usuario.getEmail() + usuario.getPassword() + usuario.getUsername() + "\n");
+
         Rol roles = rolRepository.findByNombre(TypeRole.ADMIN)
                 .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-        ;
+
         usuario.setRoles(Collections.singleton(roles));
         userRepository.save(usuario);
 
-        return ResponseEntity.ok(new MessageResponse("Usuario registrado exitosamente"));
+        return ResponseEntity.ok(new MessageResponse("success","Usuario registrado exitosamente"));
     }
 }

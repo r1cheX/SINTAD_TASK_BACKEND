@@ -8,5 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class MessageResponse {
+    public String status;
+
     public String message;
 }
