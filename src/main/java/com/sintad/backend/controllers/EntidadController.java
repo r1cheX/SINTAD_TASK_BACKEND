@@ -21,7 +21,7 @@ public class EntidadController {
 
     @GetMapping
     public List<EntidadRequest> index(){
-        return entidadService.allEntidad();
+        return entidadService.allEntidadWithDetails();
     }
 
     @GetMapping("{id}")

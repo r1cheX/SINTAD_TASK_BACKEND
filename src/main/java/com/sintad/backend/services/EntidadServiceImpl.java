@@ -3,6 +3,8 @@ package com.sintad.backend.services;
 import com.sintad.backend.dataTransferObjects.request.EntidadRequest;
 import com.sintad.backend.exceptions.NotFoundException;
 import com.sintad.backend.models.Entidad;
+import com.sintad.backend.models.TipoContribuyente;
+import com.sintad.backend.models.TipoDocumento;
 import com.sintad.backend.repositories.IEntidadRepository;
 
 import org.modelmapper.ModelMapper;
@@ -24,6 +26,15 @@ public class EntidadServiceImpl implements EntidadService{
     public List<EntidadRequest> allEntidad() {
         List<Entidad> entidades = entidadRepository.findAll();
         return entidades.stream().filter(Entidad::isEstado).map(this::mapDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EntidadRequest> allEntidadWithDetails() {
+        List<Entidad> entidades = entidadRepository.findAll();
+        return entidades.stream()
+                .filter(Entidad::isEstado)
+                .map(this::mapEntityToRequestWithDetails)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -54,6 +65,15 @@ public class EntidadServiceImpl implements EntidadService{
         entidad.setDireccion(entidadDTO.getDireccion());
         entidad.setTelefono(entidadDTO.getTelefono());
 
+        TipoDocumento tipoDocumento = new TipoDocumento();
+        tipoDocumento.setIdTipoDocumento(entidadDTO.getIdTipoDocumento());
+
+        TipoContribuyente tipoContribuyente = new TipoContribuyente();
+        tipoContribuyente.setIdTipoContribuyente(entidadDTO.getIdTipoContribuyente());
+
+        entidad.setTipoDocumento(tipoDocumento);
+        entidad.setTipoContribuyente(tipoContribuyente);
+
         Entidad updatedEntidad = entidadRepository.save(entidad);
 
         return mapDTO(updatedEntidad);
@@ -66,6 +86,17 @@ public class EntidadServiceImpl implements EntidadService{
 
         entidad.setEstado(false);
         entidadRepository.save(entidad);
+    }
+
+    private EntidadRequest mapEntityToRequestWithDetails(Entidad entidad) {
+        EntidadRequest entidadRequest = mapEntityToRequest(entidad);
+        entidadRequest.setTipoDocumentoNombre(entidad.getTipoDocumento().getNombre());
+        entidadRequest.setTipoContribuyenteNombre(entidad.getTipoContribuyente().getNombre());
+        return entidadRequest;
+    }
+
+    private EntidadRequest mapEntityToRequest(Entidad entidad) {
+        return modelMapper.map(entidad, EntidadRequest.class);
     }
 
     private EntidadRequest mapDTO(Entidad entidad){

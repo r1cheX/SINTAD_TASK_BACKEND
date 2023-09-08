@@ -5,5 +5,6 @@ import com.sintad.backend.models.TipoDocumento;
 
 
 public interface ITipoDocumentoRepository extends JpaRepository<TipoDocumento, Long> {
+
     
 }

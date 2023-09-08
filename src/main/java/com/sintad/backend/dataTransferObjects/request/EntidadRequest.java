@@ -30,9 +30,13 @@ public class EntidadRequest {
     private String telefono;
 
     @NotNull
-    private int idTipoDocumento;
+    private Long idTipoDocumento;
 
-    private int idTipoContribuyente;
+    private Long idTipoContribuyente;
+
+    private String tipoDocumentoNombre;
+
+    private String tipoContribuyenteNombre;
 
     private boolean estado = true;
 }

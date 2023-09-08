@@ -7,6 +7,8 @@ import java.util.List;
 public interface EntidadService {
     public List<EntidadRequest> allEntidad();
 
+    public List<EntidadRequest> allEntidadWithDetails();
+
     public EntidadRequest oneEntidad(Long id);
 
     public EntidadRequest createEntidad(EntidadRequest entidadDTO);
