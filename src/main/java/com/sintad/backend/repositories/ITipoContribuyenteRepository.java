@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ITipoContribuyenteRepository extends JpaRepository<TipoContribuyente, Long> {
 
-    @Query("SELECT tc FROM TipoContribuyente tc LEFT JOIN FETCH tc.entidades")
+    @Query("SELECT tc FROM TipoContribuyente tc")
     List<TipoContribuyente> findAllWithEntidades();
 }

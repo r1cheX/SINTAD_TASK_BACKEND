@@ -1,17 +1,24 @@
 package com.sintad.backend.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meilisearch.sdk.Client;
 import com.meilisearch.sdk.Index;
 import com.meilisearch.sdk.exceptions.MeilisearchException;
-import com.meilisearch.sdk.model.SearchResult;
 import com.sintad.backend.models.Entidad;
+import com.meilisearch.sdk.model.SearchResult;
 import com.sintad.backend.models.TipoContribuyente;
 import com.sintad.backend.repositories.IEntidadRepository;
 import com.sintad.backend.repositories.ITipoContribuyenteRepository;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -33,12 +40,10 @@ public class SearchService {
     @PostConstruct
     public void initializeMeilisearchIndex() {
         try {
-            Index index = meilisearchClient.index("contribuyentes");
+            Index index = meilisearchClient.index("usuarios");
             // validate index
-            if ( index.getPrimaryKey() == null ){
-                populateMeilisearchIndex();
-            }
-        } catch (MeilisearchException e) {
+            populateMeilisearchIndex(index);
+        } catch (MeilisearchException | JsonProcessingException e) {
             e.printStackTrace();
         }
     }
@@ -49,22 +54,37 @@ public class SearchService {
         return index.search(query);
     }
 
-    public void populateMeilisearchIndex() throws MeilisearchException {
-        Index index = meilisearchClient.index("contribuyentes");
+    public void populateMeilisearchIndex(Index index) throws MeilisearchException, JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        String apiUrl = "https://api.github.com/search/users?q=a"; // Reemplaza esto con la URL de la API de películas
+        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
 
-        List<TipoContribuyente> tiposContribuyentes = tipoContribuyenteRepository.findAllWithEntidades();
-        String jsonData = convertContribuyenteToJson(tiposContribuyentes);
-        index.addDocuments(jsonData);
-    }
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String jsonData = response.getBody();
+            System.out.println("jsonData: " + jsonData);
 
-    private String convertContribuyenteToJson(List<TipoContribuyente> contribuyentes) {
-        try {
+            // Analizar el JSON en un objeto JsonNode
             ObjectMapper objectMapper = new ObjectMapper();
-            String jsonData = objectMapper.writeValueAsString(contribuyentes);
-            return jsonData;
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            JsonNode rootNode = objectMapper.readTree(jsonData);
+
+            // Obtener el nodo "items" del JSON
+            JsonNode itemsNode = rootNode.get("items");
+
+            if (itemsNode != null && itemsNode.isArray()) {
+                // Iterar a través de los elementos "items"
+                for (JsonNode item : itemsNode) {
+                    String login = item.get("login").asText();
+                    int id = item.get("id").asInt();
+                    String nodeId = item.get("node_id").asText();
+                    String avatarUrl = item.get("avatar_url").asText();
+
+                    System.out.println("Usuario: " + login);
+                    System.out.println("ID: " + id);
+                }
+                index.addDocuments(String.valueOf(itemsNode));
+            } else {
+                System.err.println("Error al obtener datos de la API de películas. Código de estado: " + response.getStatusCode());
+            }
         }
     }
 }

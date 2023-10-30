@@ -18,7 +18,7 @@ public class SearchController {
     @GetMapping("/search")
     public SearchResult search(@RequestParam("query") String query) throws MeilisearchException {
         System.out.println("query: " + query);
-        String index_name = "entidades";
+        String index_name = "usuarios";
         return searchService.performSearch(index_name, query);
     }
 
