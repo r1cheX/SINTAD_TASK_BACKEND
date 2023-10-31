@@ -28,7 +28,7 @@ public class SearchService {
     @PostConstruct
     public void initializeMeilisearchIndex() {
         try {
-            Path fileName = Path.of("src/main/resources/static/movies2.json");
+            Path fileName = Path.of("src/main/resources/static/movies.json");
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(fileName), StandardCharsets.UTF_8))) {
                 StringBuilder stringBuilder = new StringBuilder();
