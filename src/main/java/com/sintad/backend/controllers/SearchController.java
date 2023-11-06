@@ -15,12 +15,22 @@ public class SearchController {
         this.searchService = searchService;
     }
 
-    @GetMapping("/search")
-    public SearchResult search(@RequestParam("query") String query) throws MeilisearchException {
+
+    @GetMapping("/search/{query}")
+    public SearchResult search(@PathVariable("query") String query) throws MeilisearchException {
         System.out.println("query: " + query);
         String index_name = "movies";
         return searchService.performSearch(index_name, query);
     }
+
+
+
+//    @GetMapping("/search")
+//    public SearchResult search(@RequestParam("query") String query) throws MeilisearchException {
+//        System.out.println("query: " + query);
+//        String index_name = "movies";
+//        return searchService.performSearch(index_name, query);
+//    }
 
 
 
